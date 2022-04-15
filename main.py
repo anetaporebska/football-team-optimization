@@ -1,5 +1,7 @@
 import random
 
+from initial_population import generate_initial_populations
+
 if __name__ == '__main__':
 
     budget = 600
@@ -18,3 +20,5 @@ if __name__ == '__main__':
             "ratings": ratings[i],
             "aux": aux[i]
         }
+
+    print(generate_initial_populations(players, 10, budget, players_number, team_size))
