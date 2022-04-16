@@ -33,6 +33,6 @@ def generate_initial_populations(players, size, max_cost, players_number, team_s
             new_idx = random.choice([*possible_players])
             population_ids[most_expensive] = new_idx
             cost = calculate_total_cost(players, population_ids)
-        initial.append(get_population(players, population_ids))
+        initial.append(population_ids)
 
     return initial
