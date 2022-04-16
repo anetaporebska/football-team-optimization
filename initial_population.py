@@ -19,10 +19,7 @@ def find_max_cost(players, ids):
 
 def get_population(players, ids):
     # zakładam, że kolejność graczy w liście determinuje ich pozycje na boisku
-    population = []
-    for i in ids:
-        population.append(players[i])
-    return population
+    return [players[i] for i in ids]
 
 
 def generate_initial_populations(players, size, max_cost, players_number, team_size):
