@@ -2,10 +2,7 @@ import random
 
 
 def calculate_total_cost(players, ids):
-    cost = 0
-    for i in ids:
-        cost += players[i]['cost']
-    return cost
+    return sum(players[i]['cost'] for i in ids)
 
 
 def find_max_cost(players, ids):
