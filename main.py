@@ -1,7 +1,8 @@
 import random
 
-if __name__ == '__main__':
+from initial_population import generate_initial_populations
 
+if __name__ == '__main__':
     budget = 600
     team_size = 11
     players_number = 100
@@ -11,10 +12,6 @@ if __name__ == '__main__':
     ratings = [[random.randint(0, 10) for _ in range(team_size)] for _ in range(players_number)]
     aux = [random.randint(0, 10) for _ in range(players_number)]
 
-    players = [dict()] * players_number
-    for i in range(players_number):
-        players[i] = {
-            "cost": cost[i],
-            "ratings": ratings[i],
-            "aux": aux[i]
-        }
+    players = [{"cost": cost[i], "ratings": ratings[i], "aux": aux[i]} for i in range(players_number)]
+
+    print(generate_initial_populations(players, 10, budget, players_number, team_size))
