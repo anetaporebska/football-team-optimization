@@ -9,6 +9,3 @@ class Team:
     def set_gene(self, idx, value):
         self.genes[idx] = value
 
-    def get_fitness_score(self):
-        return self.fitness()
-

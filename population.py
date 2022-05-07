@@ -1,4 +1,4 @@
-from random import random
+from random import randint
 
 
 class Population:
@@ -12,11 +12,11 @@ class Population:
         if use_best:
             player = players.index(players_list[0])
         else:
-            player = get_random(len(players_list))
+            player = randint(0,len(players_list)-1)
         return player
 
     def get_random_team_genes(self):
-        idx = get_random(len(self.teams))
+        idx = randint(0,len(self.teams)-1)
         return self.teams[idx]
 
     def fitness(self, team):
@@ -26,12 +26,3 @@ class Population:
             fitness_score += self.players[i]["ratings"][idx]
             idx += 1
         return fitness_score
-
-
-"""
-Ma jakis problem o randinta,
-Na razie zostawie tak, żeby tylko zobaczyć czy działa 
-"""
-def get_random(n):
-    return int(random()*n)
-

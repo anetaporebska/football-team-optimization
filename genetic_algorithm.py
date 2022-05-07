@@ -13,8 +13,7 @@ class GeneticAlgorithm:
     CHILDREN_NUM = 20
     CHILDREN_INCREASE = 2
 
-    MUTATION_RATE = 0.15
-    MUTATION_BEST_RATE = 0.1
+    MUTATION_RATE = 0.1
     MUTATION_CHANGE_OVER_EPOCHS = 120
 
     NO_IMPROVES = 80
@@ -32,16 +31,12 @@ class GeneticAlgorithm:
     def mutate(self, team_size):
         genes = []
         for i in range(team_size):
-            if GeneticAlgorithm.MUTATION_BEST_RATE > random():
-                player_gen = self.population.generate_player(i, use_best=True)
-                genes.append(player_gen)
-                continue
             if GeneticAlgorithm.MUTATION_RATE > random():
-                player_gen = self.population.generate_player(i)
-                genes.append(player_gen)
+                player_gene = self.population.generate_player(i, use_best=True)
+                genes.append(player_gene)
             else:
-                player_gen = self.population.generate_player(i)
-                genes.append(player_gen)
+                player_gene = self.population.generate_player(i)
+                genes.append(player_gene)
 
         return Team(genes)
 
