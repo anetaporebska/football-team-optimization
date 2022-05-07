@@ -1,6 +1,8 @@
 import random
 
+from genetic_algorithm import GeneticAlgorithm
 from initial_population import generate_initial_populations
+from population import Population
 
 if __name__ == '__main__':
     budget = 600
@@ -14,4 +16,8 @@ if __name__ == '__main__':
 
     players = [{"cost": cost[i], "ratings": ratings[i], "aux": aux[i]} for i in range(players_number)]
 
-    print(generate_initial_populations(players, 10, budget, players_number, team_size))
+    teams = generate_initial_populations(players, 10, budget, players_number, team_size)
+
+    population = Population(players, teams)
+    genetic_algorithm = GeneticAlgorithm(population)
+    genetic_algorithm.generate_best_team_crossover()
