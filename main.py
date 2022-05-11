@@ -20,4 +20,4 @@ if __name__ == '__main__':
 
     population = Population(players, teams)
     genetic_algorithm = GeneticAlgorithm(population)
-    genetic_algorithm.generate_best_team_crossover()
+    genetic_algorithm.generate_best_team()
