@@ -22,8 +22,9 @@ def get_population(players, ids):
     return [players[i] for i in ids]
 
 
-def generate_initial_populations(players, size, max_cost, players_number, team_size):
+def generate_initial_populations(players, size, max_cost, team_size):
     initial = []
+    players_number = len(players)
     for _ in range(size):
         population_ids = random.sample(range(0, players_number), team_size)
         cost = calculate_total_cost(players, population_ids)
