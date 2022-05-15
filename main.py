@@ -9,6 +9,7 @@ if __name__ == '__main__':
     team_size = 11
     players_number = 500
     max_cost = 100
+    integrity_factor = 0.7
 
     N = [[random.randint(0, 1) for _ in range(team_size)] for _ in range(team_size)]
     cost = [random.randint(0, max_cost) for _ in range(players_number)]
@@ -19,7 +20,7 @@ if __name__ == '__main__':
 
     teams = generate_initial_populations(players, 10, budget, team_size)
 
-    population = Population(players, teams)
+    population = Population(players, teams, N, integrity_factor)
     genetic_algorithm = GeneticAlgorithm(population, budget)
     result = genetic_algorithm.generate_best_team()
     print(result.genes)

@@ -9,7 +9,7 @@ class GeneticAlgorithm:
         self.population = population
         self.budget = budget
 
-    EPOCHS_NUM = 200
+    EPOCHS_NUM = 100
     MUTATION_INCREASE = 0.001
 
     CHILDREN_NUM = 20
