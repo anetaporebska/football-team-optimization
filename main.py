@@ -23,4 +23,4 @@ if __name__ == '__main__':
     population = Population(players, teams, N, integrity_factor)
     genetic_algorithm = GeneticAlgorithm(population, budget)
     result = genetic_algorithm.generate_best_team()
-    print(result.genes)
+    print(result)

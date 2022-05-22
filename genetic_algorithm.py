@@ -10,6 +10,7 @@ class GeneticAlgorithm:
         self.budget = budget
 
     EPOCHS_NUM = 100
+    POPULATION_LIMIT = 50
     MUTATION_INCREASE = 0.001
 
     CHILDREN_NUM = 20
@@ -36,7 +37,7 @@ class GeneticAlgorithm:
         return cost
 
     def crossover(self, team1, team2):
-        genes = self.get_random_genes()
+        genes = self.get_random_genes().copy()
         new_team = Team(genes)
         team_size = team1.size
         idx = randint(0, team_size - 1)
@@ -62,8 +63,8 @@ class GeneticAlgorithm:
 
     # TODO: Wybierać najelpsze geny od rodziców
     def generate_best_team_mutation(self, team):
+        mutation_population = []
         stable_score = 0
-        best_team = team
         best_score = self.fitness(team)
         for i in range(self.MUTATION_ITERATIONS):
             improve = False
@@ -76,13 +77,14 @@ class GeneticAlgorithm:
                 child_score = self.fitness(child)
                 if child_score >= best_score:
                     best_score = child_score
-                    best_team = child
                     improve = True
+                    mutation_population.append(child)  # add only children better than parent
             if not improve:
                 stable_score += 1
-        return best_team
+        return mutation_population
 
     def generate_best_team_crossover(self, team1, team2):
+        crossover_population = []
         no_improves = 0
         if self.fitness(team1) > self.fitness(team2):
             better_team = team1
@@ -101,26 +103,37 @@ class GeneticAlgorithm:
                     worse_team = better_team
                     better_team = child
                     improve = True
+                    crossover_population.append(child)  # add only children better than their parents
                 elif self.fitness(child) > self.fitness(worse_team):
                     worse_team = child
             if not improve:
                 no_improves += 1
 
-        return better_team, worse_team
+        return crossover_population
+
+    def selection(self, population, previous_population):
+        for genes in previous_population:
+            population.append(Team(genes))
+        sorted_population = sorted(population, key=lambda x: self.fitness(x), reverse=True)
+        result = sorted_population if len(sorted_population) < self.POPULATION_LIMIT else sorted_population[:self.POPULATION_LIMIT]
+        team_genes = []
+        for team in result:
+            team_genes.append(team.genes)
+        return team_genes
 
     def generate_best_team(self):
         fitness_history = []
-        genes = self.get_random_genes()
-        team1 = Team(genes)
-        genes = self.get_random_genes()
-        team2 = Team(genes)
         for i in range(self.EPOCHS_NUM):
-            child1, child2 = self.generate_best_team_crossover(team1, team2)
-            team1 = self.generate_best_team_mutation(child1)
-            team2 = self.generate_best_team_mutation(child2)
-            best_fitness = max(self.fitness(team1), self.fitness(team2))
+            epoch_population = []
+            team1 = Team(self.get_random_genes())
+            team2 = Team(self.get_random_genes())
+            epoch_population.extend(self.generate_best_team_crossover(team1, team2))
+            epoch_population.extend(self.generate_best_team_mutation(team1))
+            new_population = self.selection(epoch_population, self.population.teams)
+            self.population.teams = new_population
+            best_fitness = self.fitness(Team(new_population[0]))
             fitness_history.append(best_fitness)
-            if i % 10 == 0:
+            if i % 5 == 0:
                 print("GA iteration: {} fitness: {}".format(i, best_fitness))
 
         plt.plot(range(0, self.EPOCHS_NUM), fitness_history)
@@ -129,4 +142,4 @@ class GeneticAlgorithm:
         plt.title("Fitness")
         plt.savefig("ga_fitness.png")
 
-        return team1 if self.fitness(team1) > self.fitness(team2) else team2
+        return self.population.teams[0]
