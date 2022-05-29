@@ -1,4 +1,4 @@
-from random import random, randint
+import random
 import matplotlib.pyplot as plt
 
 from team import Team
@@ -13,8 +13,9 @@ class BeesAlgorithm:
         N,
         integrity_factor,
         budget,
-        epochs=100,
-        mutation_rate=0.3,
+        epochs=300,
+        player_swaps=2,
+        position_swaps=3,
         population_size=50,
         elite_bees=5,
         good_bees=10,
@@ -30,7 +31,8 @@ class BeesAlgorithm:
         self.integrity_factor = integrity_factor
         self.budget = budget
         self.epochs = epochs
-        self.mutation_rate = mutation_rate
+        self.player_swaps = player_swaps
+        self.position_swaps = position_swaps
         self.population_size = population_size
         self.elite_bees = elite_bees
         self.good_bees = good_bees
@@ -49,8 +51,37 @@ class BeesAlgorithm:
     def calculate_team_cost(self, team):
         return sum(self.population.players[player_idx]["cost"] for player_idx in team)
 
+    def apply_player_swap(self, team):
+        def any_player_idx():
+            return random.randrange(self.population_size)
+
+        to_swap = random.randrange(0, len(self.N))
+        team[to_swap] = any_player_idx()
+        while len(set(team)) != len(self.N):
+            team[to_swap] = any_player_idx()
+
+    def apply_position_swap(self, team):
+        pos1 = random.randrange(0, len(self.N))
+        pos2 = random.randrange(0, len(self.N))
+        team[pos1], team[pos2] = team[pos2], team[pos1]
+
     def search_neighborhood(self, team, site_size):
-        return team
+        source_team = team
+
+        # add current team to neighborhood to not lose the current best solution
+        new_teams = [source_team.copy()]
+
+        for _ in range(site_size):
+            new_team = source_team.copy()
+            for _ in range(self.player_swaps):
+                self.apply_player_swap(new_team)
+            for _ in range(self.position_swaps):
+                self.apply_position_swap(new_team)
+
+            if self.calculate_team_cost(new_team) <= self.budget:
+                new_teams.append(new_team)
+
+        return max(new_teams, key=lambda team: self.fitness(Team(team)))
 
     def sort_population(self):
         self.population.teams.sort(key=lambda team: self.fitness(Team(team)), reverse=True)
