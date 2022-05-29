@@ -3,12 +3,15 @@ import matplotlib.pyplot as plt
 
 from team import Team
 from population import Population
+from initial_population import generate_initial_populations
 
 
 class BeesAlgorithm:
     def __init__(
         self,
-        population: Population,
+        players,
+        N,
+        integrity_factor,
         budget,
         epochs=100,
         mutation_rate=0.3,
@@ -18,7 +21,13 @@ class BeesAlgorithm:
         elite_size=10,
         good_size=5
     ):
-        self.population = population
+        assert elite_bees < good_bees
+        assert elite_bees + good_bees < population_size
+        assert elite_size > good_size
+
+        self.players = players
+        self.N = N
+        self.integrity_factor = integrity_factor
         self.budget = budget
         self.epochs = epochs
         self.mutation_rate = mutation_rate
@@ -28,61 +37,45 @@ class BeesAlgorithm:
         self.elite_size = elite_size
         self.good_size = good_size
 
-        assert elite_bees < good_bees
-        assert elite_bees + good_bees < population_size
-        assert elite_size > good_size
+        initial_teams = generate_initial_populations(players, population_size, budget, len(N))
+        self.population = Population(players, initial_teams, N, integrity_factor)
 
     def fitness(self, team: Team):
         return self.population.fitness(team, self.budget)
 
-    def get_random_genes(self):
-        return self.population.get_random_team_genes()
+    def pick_random_team(self):
+        return generate_initial_populations(self.players, 1, self.budget, len(self.N))[0]
 
     def calculate_team_cost(self, team):
         return sum(self.population.players[player_idx]["cost"] for player_idx in team)
 
-    def mutate(self, genes):
-        new_genes = genes.copy()
-        for i in range(len(genes)):
-            if self.mutation_rate > random():
-                player_gene = self.population.generate_player(i)
-                current_cost = self.calculate_team_cost(new_genes)
-                current_gene_cost = self.population.players[i]["cost"]
-                new_gene_cost = self.population.players[player_gene]["cost"]
-                # warunek sprawdzający czy w wyniku mutacji nie przekroczymy budżetu
-                if current_cost - current_gene_cost + new_gene_cost < self.budget:
-                    new_genes[i] = player_gene
+    def search_neighborhood(self, team, site_size):
+        return team
 
-        return Team(new_genes)
-
-    def select_neighbour(population: Population, site_size):
-        pass
-
-    def init_populations(self):
-        return [self.get_random_genes() for _ in range(self.population_size)]
+    def sort_population(self):
+        self.population.teams.sort(key=lambda team: self.fitness(Team(team)), reverse=True)
 
     def generate_best_team(self):
-        # TODO: population vs team? How do I make an artificially big population?
-        # TODO: move improvements from this algorithm to generic_algorithm.py too
         fitness_history = []
-        populations = self.init_populations()
-        populations.sort(key=lambda pop: self.fitness(Team(pop)), reverse=True)
+
+        self.sort_population()
+
         for i in range(self.epochs):
-            for i in range(0, self.elite_bees):
-                populations[i] = self.select_neighbour(populations[i], self.elite_size)
+            for bee in range(0, self.elite_bees):
+                self.population.teams[bee] = self.search_neighborhood(self.population.teams[bee], self.elite_size)
 
-            for i in range(self.elite_bees, self.elite_bees + self.good_bees):
-                populations[i] = self.select_neighbour(populations[i], self.good_size)
+            for bee in range(self.elite_bees, self.elite_bees + self.good_bees):
+                self.population.teams[bee] = self.search_neighborhood(self.population.teams[bee], self.good_size)
 
-            for i in range(self.elite_bees + self.good_bees, self.population_size):
-                populations[i] = self.get_random_genes()
+            for bee in range(self.elite_bees + self.good_bees, self.population_size):
+                self.population.teams[bee] = self.pick_random_team()
 
-            populations.sort(key=self.fitness, reverse=True)
-            best_fitness = self.fitness(populations[0])
+            self.sort_population()
+            best_fitness = self.fitness(Team(self.population.teams[0]))
+            fitness_history.append(best_fitness)
 
             if i % 5 == 0:
                 print(f"Bees iteration: {i} fitness: {best_fitness}")
-                fitness_history.append(best_fitness)
 
         plt.plot(range(0, self.epochs), fitness_history)
         plt.xlabel("iterations")
