@@ -9,7 +9,7 @@ class GeneticAlgorithm:
         self.population = population
         self.budget = budget
 
-    EPOCHS_NUM = 10
+    EPOCHS_NUM = 11
     MUTATION_INCREASE = 0.001
 
     CHILDREN_NUM = 20
@@ -71,6 +71,19 @@ class GeneticAlgorithm:
 
         return Team(new_genes)
 
+    def mutate_genes_swap(self, genes):
+        new_genes = genes.copy()
+        idx1 = randint(0, len(new_genes) - 1)
+        idx2 = randint(0, len(new_genes) - 1)
+        while idx1 == idx2:
+            idx2 = randint(0, len(new_genes) - 1)
+
+        team = Team(new_genes)
+        team.set_gene(idx1, genes[idx2])
+        team.set_gene(idx2, genes[idx1])
+
+        return team
+
     # TODO: Wybierać najelpsze geny od rodziców
     def generate_best_team_mutation(self, team):
         stable_score = 0
@@ -83,7 +96,7 @@ class GeneticAlgorithm:
                 self.MUTATION_RATE += self.MUTATION_INCREASE
                 self.CHILDREN_NUM += self.CHILDREN_INCREASE
             for j in range(self.CHILDREN_NUM):
-                child = self.mutate(team.genes)
+                child = self.mutate_swap_genes(team.genes)
                 child_score = self.fitness(child)
                 if child_score >= best_score:
                     best_score = child_score
