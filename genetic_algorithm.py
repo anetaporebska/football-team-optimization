@@ -35,7 +35,7 @@ class GeneticAlgorithm:
         return cost
 
     def crossover_divide_into_two_parts(self, team1, team2):
-        genes = self.get_random_genes()
+        genes = self.get_random_genes().copy()
         new_team = Team(genes)
         team_size = team1.size
         idx = randint(0, team_size - 1)
@@ -46,7 +46,7 @@ class GeneticAlgorithm:
         return new_team
 
     def crossover_pairwise_comparison(self, team1, team2):
-        genes = self.get_random_genes()
+        genes = self.get_random_genes().copy()
         new_team = Team(genes)
         team_size = team1.size
         for i in range(team_size):
