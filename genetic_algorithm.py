@@ -47,7 +47,7 @@ class GeneticAlgorithm:
         return new_team
 
     def crossover_pairwise_comparison(self, team1, team2):
-        genes = self.get_random_genes()
+        genes = self.get_random_genes().copy()
         new_team = Team(genes)
         team_size = team1.size
         for i in range(team_size):
@@ -56,7 +56,6 @@ class GeneticAlgorithm:
             else:
                 new_team.set_gene(i, team2.get_gene(i))
         return new_team
-
 
     def mutate(self, genes):
         new_genes = genes.copy()
@@ -85,7 +84,6 @@ class GeneticAlgorithm:
 
         return team
 
-    # TODO: Wybierać najelpsze geny od rodziców
     def generate_best_team_mutation(self, team):
         mutation_population = []
         stable_score = 0
@@ -97,7 +95,7 @@ class GeneticAlgorithm:
                 self.MUTATION_RATE += self.MUTATION_INCREASE
                 self.CHILDREN_NUM += self.CHILDREN_INCREASE
             for j in range(self.CHILDREN_NUM):
-                child = self.mutate_swap_genes(team.genes)
+                child = self.mutate_genes_swap(team.genes)
                 child_score = self.fitness(child)
                 if child_score >= best_score:
                     best_score = child_score
@@ -105,7 +103,7 @@ class GeneticAlgorithm:
                     mutation_population.append(child)  # add only children better than parent
             if not improve:
                 stable_score += 1
-        return best_team
+        return mutation_population
 
     def generate_best_team_crossover(self, team1, team2):
         crossover_population = []
