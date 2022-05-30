@@ -9,14 +9,11 @@ class Population:
         self.N = N
         self.integrity_factor = integrity_factor
 
-    # TODO: dla use_best uwzględniać aux
     def generate_player(self, position, use_best=False):
         players = self.players
         players_list = sorted(players, key=lambda x: x["ratings"][position], reverse=True)
-        if use_best:  # TODO unused now
-            player = players.index(players_list[0])
-        else:
-            player = randint(0, len(players_list) - 1)
+        #
+        player = randint(0, len(players_list) - 1)
         return player
 
     def get_random_team_genes(self):
@@ -45,3 +42,6 @@ class Population:
             cost += self.players[i]["cost"]
             idx += 1
         return 0 if cost > budget or len(set(team.genes)) != 11 else fitness_score
+
+    def player_fitness(self, player_idx, position):
+        return self.players[player_idx]["ratings"][position]

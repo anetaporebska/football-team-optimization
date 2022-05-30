@@ -9,7 +9,7 @@ class GeneticAlgorithm:
         self.population = population
         self.budget = budget
 
-    EPOCHS_NUM = 100
+    EPOCHS_NUM = 10
     MUTATION_INCREASE = 0.001
 
     CHILDREN_NUM = 20
@@ -17,7 +17,6 @@ class GeneticAlgorithm:
 
     MUTATION_ITERATIONS = 20
     MUTATION_RATE = 0.3
-    MUTATION_CHANGE_OVER_EPOCHS = 120  # TODO unused
 
     CROSSOVER_ITERATIONS = 20
 
@@ -35,7 +34,7 @@ class GeneticAlgorithm:
             cost += self.population.players[player_idx]["cost"]
         return cost
 
-    def crossover(self, team1, team2):
+    def crossover_divide_into_two_parts(self, team1, team2):
         genes = self.get_random_genes()
         new_team = Team(genes)
         team_size = team1.size
@@ -45,6 +44,18 @@ class GeneticAlgorithm:
         for i in range(idx, team_size):
             new_team.set_gene(i, team2.get_gene(i))
         return new_team
+
+    def crossover_pairwise_comparison(self, team1, team2):
+        genes = self.get_random_genes()
+        new_team = Team(genes)
+        team_size = team1.size
+        for i in range(team_size):
+            if self.population.player_fitness(team1.get_gene(i), i) > self.population.player_fitness(team2.get_gene(i), i):
+                new_team.set_gene(i, team1.get_gene(i))
+            else:
+                new_team.set_gene(i, team2.get_gene(i))
+        return new_team
+
 
     def mutate(self, genes):
         new_genes = genes.copy()
@@ -96,7 +107,7 @@ class GeneticAlgorithm:
                 no_improves = 0
                 self.CHILDREN_NUM += self.CHILDREN_INCREASE
             for j in range(self.CHILDREN_NUM):
-                child = self.crossover(better_team, worse_team)
+                child = self.crossover_pairwise_comparison(better_team, worse_team)
                 if self.fitness(child) > self.fitness(better_team):
                     worse_team = better_team
                     better_team = child
