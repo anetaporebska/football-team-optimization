@@ -96,7 +96,7 @@ class GeneticAlgorithm:
                 self.MUTATION_RATE += self.MUTATION_INCREASE
                 self.CHILDREN_NUM += self.CHILDREN_INCREASE
             for j in range(self.CHILDREN_NUM):
-                child = self.mutate_swap_genes(team.genes)
+                child = self.mutate_genes_swap(team.genes)
                 child_score = self.fitness(child)
                 if child_score >= best_score:
                     best_score = child_score
