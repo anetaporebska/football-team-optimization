@@ -2,10 +2,11 @@ from random import random, randint
 import matplotlib.pyplot as plt
 
 from team import Team
+from population import Population
 
 
 class GeneticAlgorithm:
-    def __init__(self, population, budget):
+    def __init__(self, population: Population, budget):
         self.population = population
         self.budget = budget
 

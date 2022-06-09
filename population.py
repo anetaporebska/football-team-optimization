@@ -33,7 +33,8 @@ class Population:
         return np.sum(np.array(self.N) @ np.array(players_comp).T) / normalization
 
     def players_comp(self, player1, player2):
-        return 1 if player1["aux"] == player2["aux"] else 0  # TODO narodowość, liga itp
+        compatible_attrs = [attr1 == attr2 for attr1, attr2 in zip(player1["aux"], player2["aux"])]
+        return sum(compatible_attrs) / len(compatible_attrs)
 
     # TODO: uzględniać aux
     def fitness(self, team, budget):
