@@ -1,5 +1,5 @@
 import json
-from players.const import JSON_PATH, CSV_PATH
+from players.const.const import JSON_PATH
 
 
 def lead_n_players(number):
@@ -10,7 +10,6 @@ def lead_n_players(number):
             if number == n:
                 break
             result.append(player)
-
     return result
 
 
@@ -25,7 +24,6 @@ def lead_n_players_with_price(number, price):
             if int(player['value']) < price:
                 result.append(player)
                 n += 1
-
     return result
 
 
@@ -51,7 +49,6 @@ def lead_n_players_in_every_position(number):
                 if players[player['position']] == 0:
                     players.pop(player['position'])
                 result.append(player)
-    print(len(result))
     return result
 
 
@@ -78,9 +75,8 @@ def lead_n_players_in_every_position_with_price(number, price):
                     if players[player['position']] == 0:
                         players.pop(player['position'])
                     result.append(player)
-    print(len(result))
     return result
 
 
 print(lead_n_players(5))
-print(lead_n_players_in_every_position_with_price(1, 10000000))
+print(lead_n_players_in_every_position_with_price(1, 50000000))

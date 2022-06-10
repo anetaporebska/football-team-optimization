@@ -1,15 +1,13 @@
 import requests
-from PIL import Image
 from PIL import ImageDraw
 
-from players.const import *
+from players.const.const import *
 
 
 def save_country(country):
-    url = "https://countryflagsapi.com/png/%s" % country
+    url = URL_FLAGS % country
     response = requests.get(url)
     if response.status_code == 200:
-        print(country)
         with open(COUNTRY_PATH, 'wb') as file:
             file.write(response.content)
 
@@ -25,6 +23,7 @@ def player_photo(path):
 def create_player(player, position):
     save_country(player['nationality'].lower())
     player_photo(player['url'])
+    player_name = player['name']
 
     try:
         ImageCountry = Image.open(COUNTRY_PATH)
@@ -44,8 +43,9 @@ def create_player(player, position):
 
     I1 = ImageDraw.Draw(ImageCardCopy)
 
-    I1.text(NAME_LOCATION, player['name'], FONT_COLOR, align='left', font=PLAYER_FONT, stroke_width=1)
+    I1.text(NAME_LOCATION, player_name, FONT_COLOR, align='left', font=PLAYER_FONT, stroke_width=1)
     I1.text(POSITION_LOCATION, position.upper(), FONT_COLOR, align='left', font=POSITION_FONT, stroke_width=2)
     I1.text(RATING_LOCATION, player['rating'][position], FONT_COLOR, align='left', font=SCORE_FONT, stroke_width=3)
 
-    ImageCardCopy.save(PLAYER_CARD)
+    ImageCardCopy.save(PLAYER_CARD + player_name.replace(' ', '') + PNG)
+    ImageCardCopy.save(PLAYER_CARD_TEMPORARILY)

@@ -2,7 +2,7 @@ import csv
 import json
 import unidecode
 
-from players.const import JSON_PATH, CSV_PATH
+from players.const.const import JSON_PATH, CSV_PATH
 
 
 def create_json(data):
