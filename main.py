@@ -21,10 +21,9 @@ def get_ratings_arr(player):
 
 
 if __name__ == '__main__':
-    budget = 500000000
+    budget = 600000000
     team_size = 11
     players_number = 5000
-    max_cost = 100
     integrity_factor = 0.7
 
     loaded_players = lead_n_players(players_number)
