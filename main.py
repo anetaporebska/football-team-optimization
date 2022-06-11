@@ -1,26 +1,57 @@
 #!/usr/bin/env python3
 
-import random, sys
+import sys
 
-from genetic_algorithm import GeneticAlgorithm
 from bees_algorithm import BeesAlgorithm
+from genetic_algorithm import GeneticAlgorithm
 from initial_population import generate_initial_populations
+from players.lead_player import lead_n_players
 from population import Population
 
+
+def get_ratings_arr(player):
+    ratings = []
+    player_rating = player['rating']
+    for i in player_rating:
+        if i in ['cb', 'cm', 'st']:
+            ratings.append(int(player_rating[i]))
+        ratings.append(int(player_rating[i]))
+
+    return ratings
+
+
 if __name__ == '__main__':
-    budget = 600
+    budget = 500000000
     team_size = 11
-    players_number = 500
+    players_number = 5000
     max_cost = 100
     integrity_factor = 0.7
-    aux_dims = [2, 2, 3]
 
-    N = [[random.randint(0, 1) for _ in range(team_size)] for _ in range(team_size)]
-    cost = [random.randint(0, max_cost) for _ in range(players_number)]
-    ratings = [[random.randint(0, 10) * cost[x] / max_cost for _ in range(team_size)] for x in range(players_number)]
-    aux = [[random.randrange(0, dim) for dim in aux_dims] for _ in range(players_number)]
+    loaded_players = lead_n_players(players_number)
 
-    players = [{"cost": cost[i], "ratings": ratings[i], "aux": aux[i]} for i in range(players_number)]
+    # gk, rb, cbl, cbr, lb, rm, cml, cmr, lm, stl, str
+    N = [
+        [0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0],
+        [1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0],
+        [1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+        [0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0],
+        [0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1],
+        [0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+        [0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0],
+    ]
+
+    players = [
+        {
+            "cost": int(loaded_players[i]['value']),
+            "ratings": get_ratings_arr(loaded_players[i]),
+            "aux": [loaded_players[i]['club'], loaded_players[i]['nationality']]
+        }
+        for i in range(players_number)
+    ]
 
     if len(sys.argv) > 1 and sys.argv[1] == "bees":
         algorithm = BeesAlgorithm(players, N, integrity_factor, budget)
@@ -30,5 +61,9 @@ if __name__ == '__main__':
 
         algorithm = GeneticAlgorithm(population, budget)
 
-    result = algorithm.generate_best_team()
-    print(result)
+    result_indexes = algorithm.generate_best_team()
+
+    result = []
+    for idx in result_indexes:
+        result.append(loaded_players[idx])
+        print(loaded_players[idx])
