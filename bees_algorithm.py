@@ -105,8 +105,9 @@ class BeesAlgorithm:
             best_fitness = self.fitness(Team(self.population.teams[0]))
             fitness_history.append(best_fitness)
 
+            import sys
             if i % 5 == 0:
-                print(f"Bees iteration: {i} fitness: {best_fitness}")
+                print(f"Bees iteration: {i} fitness: {best_fitness}", file=sys.stderr)
 
         plt.plot(range(0, self.epochs), fitness_history)
         plt.xlabel("iterations")
@@ -114,4 +115,4 @@ class BeesAlgorithm:
         plt.title("Fitness")
         plt.savefig("bees_fitness.png")
 
-        return self.population.teams[0]
+        return self.fitness(Team(self.population.teams[0])), self.population.teams[0]

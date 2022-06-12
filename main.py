@@ -54,19 +54,20 @@ if __name__ == '__main__':
         for i in range(players_number)
     ]
 
-    if len(sys.argv) > 1 and sys.argv[1] == "bees":
-        algorithm = BeesAlgorithm(players, N, integrity_factor, budget)
-    else:
-        teams = generate_initial_populations(players, 10, budget, team_size)
-        population = Population(players, teams, N, integrity_factor)
+    def avg(x):
+        return sum(x) / len(x)
 
-        algorithm = GeneticAlgorithm(population, budget)
+    for player_swaps in (1, 2):
+        for position_swaps in (1, 2):
+            for epochs in (200, 500, 1000):
+                fitnesses = [BeesAlgorithm(
+                    players,
+                    N,
+                    integrity_factor,
+                    budget,
+                    player_swaps=player_swaps,
+                    position_swaps=position_swaps,
+                    epochs=epochs
+                ).generate_best_team()[0] for _ in range(3)]
 
-    result_indexes = algorithm.generate_best_team()
-
-    result = {}
-    for i, idx in enumerate(result_indexes):
-        result[PLAYER_POSITION[i]] = loaded_players[idx]
-
-    print(result)
-    create_team(result)
+                print("XDDDDD", ','.join(str(x) for x in (avg(fitnesses), player_swaps, position_swaps, epochs)))
