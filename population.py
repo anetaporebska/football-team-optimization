@@ -1,5 +1,9 @@
+import math
 from random import randint
+from players.const.const import *
 import numpy as np
+
+from players.create_team import chemistry_score
 
 
 class Population:
@@ -21,7 +25,8 @@ class Population:
         return self.teams[idx]
 
     def comp(self, team, i):
-        players_comp = [self.players_comp(self.players[team.genes[i]], self.players[team.genes[k]]) for k in range(len(team.genes))]
+        players_comp = [self.players_comp(self.players[team.genes[i]], self.players[team.genes[k]]) for k in
+                        range(len(team.genes))]
         normalization = 0
         for j in range(len(team.genes)):
             normalization += self.N[i][j]
@@ -34,14 +39,19 @@ class Population:
         return sum(compatible_attrs) / len(compatible_attrs)
 
     # TODO: uzględniać aux
+
     def fitness(self, team, budget):
-        fitness_score = 0
         cost = 0
-        idx = 0
-        for i in team.genes:
-            fitness_score += self.players[i]["ratings"][idx] * (1 + self.integrity_factor * self.comp(team, idx))
-            cost += self.players[i]["cost"]
-            idx += 1
+        rating = 0
+        result = {}
+        for i, idx in enumerate(team.genes):
+            result[PLAYER_POSITION[i]] = self.players[idx]
+            rating += int(self.players[idx]["ratings"][i])
+            cost += self.players[idx]["cost"]
+        fitness_chemistry = chemistry_score(result)
+        fitness_chemistry = MAX_CHEMISTRY if fitness_chemistry > MAX_CHEMISTRY else fitness_chemistry
+        fitness_score = math.ceil(rating / NUMBER_OF_PLAYER_IN_PITCH) + fitness_chemistry
+
         return 0 if cost > budget or len(set(team.genes)) != 11 else fitness_score
 
     def player_fitness(self, player_idx, position):
