@@ -1,4 +1,6 @@
 from random import randint
+from time import sleep
+
 import numpy as np
 
 
@@ -27,7 +29,7 @@ class Population:
             normalization += self.N[i][j]
         if normalization == 0:
             return 0
-        return np.sum(np.array(self.N) @ np.array(players_comp).T) / normalization
+        return np.array(self.N[i]) @ np.array(players_comp) / normalization
 
     def players_comp(self, player1, player2):
         compatible_attrs = [attr1 == attr2 for attr1, attr2 in zip(player1["aux"], player2["aux"])]
