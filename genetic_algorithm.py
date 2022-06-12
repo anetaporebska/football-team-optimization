@@ -10,17 +10,17 @@ class GeneticAlgorithm:
         self.population = population
         self.budget = budget
 
-    EPOCHS_NUM = 100
+    EPOCHS_NUM = 201
     POPULATION_LIMIT = 50
     MUTATION_INCREASE = 0.001
 
-    CHILDREN_NUM = 20
+    CHILDREN_NUM = 10
     CHILDREN_INCREASE = 2
 
-    MUTATION_ITERATIONS = 20
+    MUTATION_ITERATIONS = 10
     MUTATION_RATE = 0.3
 
-    CROSSOVER_ITERATIONS = 20
+    CROSSOVER_ITERATIONS = 10
 
     NO_IMPROVES = 10
 
@@ -96,7 +96,7 @@ class GeneticAlgorithm:
                 self.MUTATION_RATE += self.MUTATION_INCREASE
                 self.CHILDREN_NUM += self.CHILDREN_INCREASE
             for j in range(self.CHILDREN_NUM):
-                child = self.mutate_genes_swap(team.genes)
+                child = self.mutate(team.genes)
                 child_score = self.fitness(child)
                 if child_score >= best_score:
                     best_score = child_score
