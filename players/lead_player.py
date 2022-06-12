@@ -77,6 +77,3 @@ def lead_n_players_in_every_position_with_price(number, price):
                     result.append(player)
     return result
 
-
-print(lead_n_players(5))
-print(lead_n_players_in_every_position_with_price(1, 50000000))

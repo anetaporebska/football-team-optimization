@@ -62,4 +62,4 @@ def create_team(team):
     draw_pitch(team, team_chemistry)
 
 
-create_team(testing_data_4)
+#create_team(testing_data_4)

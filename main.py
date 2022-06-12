@@ -5,6 +5,8 @@ import sys
 from bees_algorithm import BeesAlgorithm
 from genetic_algorithm import GeneticAlgorithm
 from initial_population import generate_initial_populations
+from players.const.const import PLAYER_POSITION
+from players.create_team import create_team
 from players.lead_player import lead_n_players
 from population import Population
 
@@ -24,7 +26,7 @@ if __name__ == '__main__':
     budget = 600000000
     team_size = 11
     players_number = 5000
-    integrity_factor = 0.7
+    integrity_factor = 0.5
 
     loaded_players = lead_n_players(players_number)
 
@@ -62,7 +64,9 @@ if __name__ == '__main__':
 
     result_indexes = algorithm.generate_best_team()
 
-    result = []
-    for idx in result_indexes:
-        result.append(loaded_players[idx])
-        print(loaded_players[idx])
+    result = {}
+    for i, idx in enumerate(result_indexes):
+        result[PLAYER_POSITION[i]] = loaded_players[idx]
+
+    print(result)
+    create_team(result)

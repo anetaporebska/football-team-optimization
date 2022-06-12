@@ -1,17 +1,17 @@
 import time
 from PIL import ImageFont, Image
 
-JSON_PATH = 'static/data/football.json'
+JSON_PATH = 'players/static/data/football.json'
 CSV_PATH = 'players_fifa22.csv'
-COUNTRY_PATH = "static/photo/country.png"
-PLAYER_PHOTO = "static/photo/player.png"
-CARD = "static/photo/player_card.png"
-ARIAL = "static/font/arial.ttf"
-PITCH_PATH = 'static/photo/pitch.png'
-PLAYER_CARD = 'static/player_card/'
-PLAYER_CARD_TEMPORARILY = 'static/photo/player.png'
-POLAND = 'static/photo/poland.png'
-RESULT_TEAM = 'static/result/resultTeam'
+COUNTRY_PATH = "players/static/photo/country.png"
+PLAYER_PHOTO = "players/static/photo/player.png"
+CARD = "players/static/photo/player_card.png"
+ARIAL = "players/static/font/arial.ttf"
+PITCH_PATH = 'players/static/photo/pitch.png'
+PLAYER_CARD = 'players/static/player_card/'
+PLAYER_CARD_TEMPORARILY = 'players/static/photo/player.png'
+POLAND = 'players/static/photo/poland.png'
+RESULT_TEAM = 'players/static/result/resultTeam'
 PNG = '.png'
 URL_FLAGS = "https://countryflagsapi.com/png/%s"
 RESULT_TEAM_PHOTO = RESULT_TEAM + str(time.time()) + PNG
@@ -83,6 +83,8 @@ CONNECTION_BETWEEN_PLAYERS = [
     ('stl', 'str', [(SIDE_WIDTH - CENTER_PLAYERS_POSITION, STRIKER_POSITION),
                     (SIDE_WIDTH + CENTER_PLAYERS_POSITION, STRIKER_POSITION)])
 ]
+
+PLAYER_POSITION = ['gk', 'rb', 'cbl', 'cbr', 'lb', 'rm', 'cml', 'cmr', 'lm', 'stl', 'str']
 
 CONNECTION_ON_PITCH = {
     'gk': ['cbl', 'cbr'],
