@@ -1,4 +1,4 @@
-# football-team-optimization
+# Football Team Optimization
 
 
  How to run
